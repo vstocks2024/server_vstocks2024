@@ -247,8 +247,8 @@ export async function handleDashboardImageDelete(
     const imageid = req.params.deleteId;
     console.log(imageid);
     await deleteImageFileFromBucket(imageid)
-      .then(async (res: any) => {
-        if (!res || res["$metadata"]["httpStatusCode"] != 204) return;
+      .then(async (s3resolve) => {
+        if (!s3resolve || s3resolve["$metadata"]["httpStatusCode"] != 204) res.status(400).send("Image can't be deleted");
         try {
           await prisma.image
             .delete({
@@ -258,19 +258,19 @@ export async function handleDashboardImageDelete(
             })
             .then((dbresolve) => {
               console.log(dbresolve);
-             return  res.status(200).send("Image successfully deleted");
+              res.status(200).send("Image successfully deleted");
             })
             .catch((dbreject) => {
               console.log(dbreject);
-              return res.status(400).send("Image doesn't get deleted please contact admin");
+               res.status(400).send("Image doesn't get deleted please contact admin");
             });
         } catch (error) {
           console.log(error);
           res.status(400).send("Image doesn't get deleted please contact admin");
         }
       })
-      .catch(async (rej) => {
-        console.log(rej);
+      .catch((s3reject) => {
+        console.log(s3reject);
         res.status(400).send("Image doesn't get deleted please contact admin");
       });
   } catch (error) {

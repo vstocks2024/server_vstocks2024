@@ -16,8 +16,11 @@ import dotenv from "dotenv";
 import cors from "cors";
 
 import { ErrorResponse, SuccessResponse } from "./utils/statusmessage";
-import handleDashboardUploadVideo, {
+import  {
+  handleDashboardUploadVideo,
+  handleDashboardVideoDelete,
   handleDeleteVideoFromBucketAndDatabase,
+  handleGetListVideos,
   handleListVideo,
   handleUploadVideo,
 } from "./controllers/videos";
@@ -113,10 +116,7 @@ app.post(`/user/user_upload_image`, handleUserUploadImage);
 
 app.post(`/user/login`, handleLoginUser);
 
-//Dashboard Video Upload API
-app.post(`/upload/video/new`, handleDashboardUploadVideo);
-
-//
+//End
 
 app.get("/template/:templateid", async (req: any, res: any, next: any) => {
   if (!req) return new ErrorResponse(404, "No Request Found");
@@ -128,8 +128,6 @@ app.get("/template/:templateid", async (req: any, res: any, next: any) => {
 });
 
 //Categories API
-// Add New Category API
-
 app.post("/categories/new", handleAddNewCategory);
 
 app.get("/categories/list_categories", handleGetCategoryData);
@@ -193,3 +191,13 @@ app.delete('/images/delete/:deleteId',handleDashboardImageDelete);
 
 
 //End 
+
+
+//Videos API
+app.get("/videos/listall",handleGetListVideos);
+
+app.post(`/videos/singlevideofile`,upload.single("videofile"),handleDashboardUploadVideo);
+
+app.delete('/videos/delete/:deleteId',handleDashboardVideoDelete);
+
+//End
