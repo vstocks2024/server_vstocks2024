@@ -23,6 +23,7 @@ import handleDashboardUploadVideo, {
 } from "./controllers/videos";
 import multer from "multer";
 import {
+  handleDashboardImageDelete,
   handleDashboardImageUploadFile,
   handleDeleteImage,
   handleDeleteImageFromBucket,
@@ -186,7 +187,9 @@ app.get("/customers/listall",handleListAllCustomers);
 
 app.get("/images/listall",handleGetListImages);
 
-app.post("/images/singleimagefile",upload.single("imagefile"),handleDashboardImageUploadFile)
+app.post("/images/singleimagefile",upload.single("imagefile"),handleDashboardImageUploadFile);
+
+app.delete('/images/delete/:deleteId',handleDashboardImageDelete);
 
 
 //End 
