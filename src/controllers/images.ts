@@ -166,3 +166,65 @@ export async function handleSearchVectors(req: any, res: any, next: any) {
     res.send(new ErrorResponse(400, String(err)));
   }
 }
+
+
+export async function handleGetListImages(req:any,res:any,next:any){
+  try{
+    if (!req) return res.status(404).send("No Request Found");
+    await prisma.image.findMany({})
+    .then((dbresolve)=>{
+    console.log(dbresolve);
+    res.status(200).send(dbresolve);
+    })
+    .catch((dbreject)=>{
+      res.status(400).send(dbreject);
+      console.log(dbreject);
+    })
+
+  }
+  catch(error){
+    res.status(400).send("Exception Occured on Database")
+    console.log(error);
+  }
+
+}
+
+
+export async function handleDashboardImageUploadFile(req:any,res:any,next:any){
+  try{
+    if (!req) return res.status(404).send("No Request Found");
+    const imagefile=req.file;
+    console.log(imagefile);
+    const imagefiletype = `${imagefile.mimetype}`;
+    const imageName = `${imagefile.originalname}`;
+    const imagebuffer = imagefile.buffer;
+    await prisma.image
+      .create({
+        data: {
+         image_name:imageName
+        },
+      })
+      .then(async(dbresolve) => {
+        console.log(dbresolve);
+          await uploadFile(imagebuffer,  `users/uploads/images/category/mahashivaratri/${dbresolve.id}`,imagefiletype)
+          .then((s3resolve) => {
+            console.log("From S3 Resolve", s3resolve);
+            if (s3resolve[`$metadata`]["httpStatusCode"] === 200)
+              res.status(201).send("Created");
+          })
+          .catch((s3reject) => {
+            console.log("From S3 Reject", s3reject);
+            res.status(400).send("Request Not Completed");
+          });
+      })
+      .catch((dbreject) => {
+        console.log(dbreject);
+        res.status(400).send("Request Not Completed");
+      });
+  }
+  catch(error){
+    res.status(400).send("Exception Occured on Database")
+    console.log(error);
+  }
+
+}

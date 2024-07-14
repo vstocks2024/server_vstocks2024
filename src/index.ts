@@ -23,8 +23,10 @@ import handleDashboardUploadVideo, {
 } from "./controllers/videos";
 import multer from "multer";
 import {
+  handleDashboardImageUploadFile,
   handleDeleteImage,
   handleDeleteImageFromBucket,
+  handleGetListImages,
   handleImageTableFieldsName,
   handleListImage,
   handleSearchVectors,
@@ -178,3 +180,13 @@ app.get("/customers/listall",handleListAllCustomers);
 
 
 //End of customers API
+
+
+//Images API 
+
+app.get("/images/listall",handleGetListImages);
+
+app.post("/images/singleimagefile",upload.single("imagefile"),handleDashboardImageUploadFile)
+
+
+//End 
