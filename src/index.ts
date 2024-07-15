@@ -59,6 +59,7 @@ import {
 } from "./controllers/tags";
 import { handleAddNew2Vector, handleDeleteVector, handleEditVectorData, handleGetVectorsList } from "./controllers/vectors";
 import { handleListAllCustomers } from "./controllers/customers";
+import { handleDeleteAnimation, handleGetAnimationsList } from "./controllers/animations";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -199,5 +200,14 @@ app.get("/videos/listall",handleGetListVideos);
 app.post(`/videos/singlevideofile`,upload.single("videofile"),handleDashboardUploadVideo);
 
 app.delete('/videos/delete/:deleteId',handleDashboardVideoDelete);
+
+//End
+
+//Animation APi
+app.get("/animations/listall",handleGetAnimationsList);
+
+app.delete("/animations/delete/:deleteId",handleDeleteAnimation);
+
+
 
 //End
