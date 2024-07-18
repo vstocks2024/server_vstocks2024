@@ -191,7 +191,8 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
         await prisma.vector_category.createMany({
             data: vectors_category_data,
           })
-          .then(async (dbresolve2:any) => {
+          .then(async(dbresolve2) => {
+            console.log(dbresolve2);
             let vector_tag_data: any[] = [];
             tags.forEach((element: any) => {
               vector_tag_data = [
@@ -203,7 +204,8 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
               .createMany({
                 data: vector_tag_data,
               })
-              .then(async(dbresolve3:any) => {
+              .then(async(dbresolve3) => {
+                console.log(dbresolve3)
                 await uploadFile(
                   vectorbuffer,
                   `vectors/${dbresolve1.id}`,
@@ -219,8 +221,8 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
                             url: `${process.env.NEXT_PUBLIC_BUCKET_URL}/vectors/${dbresolve1.id}`,
                           },
                         })
-                        .then(async (dbresolve4:any) => {
-                          console.log;
+                        .then(async(dbresolve4) => {
+                          console.log(dbresolve4);
                           res.status(201).send(dbresolve1);
                         })
                         .catch((dbreject4) => {
