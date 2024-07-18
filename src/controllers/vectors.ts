@@ -188,11 +188,10 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
             { vector_id: dbresolve1.id, category_id: element.value },
           ];
         });
-        await prisma.vectors_Category
-          .createMany({
+        await prisma.vector_category.createMany({
             data: vectors_category_data,
           })
-          .then(async (dbresolve2) => {
+          .then(async (dbresolve2:any) => {
             let vector_tag_data: any[] = [];
             tags.forEach((element: any) => {
               vector_tag_data = [
@@ -200,11 +199,11 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
                 { vector_id: dbresolve1.id, tag_id: element.value },
               ];
             });
-            await prisma.vectors_Tag
+            await prisma.vector_tag
               .createMany({
                 data: vector_tag_data,
               })
-              .then(async (dbresolve3) => {
+              .then(async(dbresolve3:any) => {
                 await uploadFile(
                   vectorbuffer,
                   `vectors/${dbresolve1.id}`,
@@ -213,14 +212,14 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
                   .then(async (s3resolve) => {
                     console.log("From S3 Resolve", s3resolve);
                     if (s3resolve[`$metadata`]["httpStatusCode"] === 200)
-                      await prisma.vectors_Url
+                      await prisma.vectors_url
                         .create({
                           data: {
                             vector_id: dbresolve1.id,
                             url: `${process.env.NEXT_PUBLIC_BUCKET_URL}/vectors/${dbresolve1.id}`,
                           },
                         })
-                        .then(async (dbresolve4) => {
+                        .then(async (dbresolve4:any) => {
                           console.log;
                           res.status(201).send(dbresolve1);
                         })
