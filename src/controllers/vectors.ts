@@ -262,7 +262,7 @@ export async function handleGetAllVectors(req: any, res: any, next: any) {
       .findMany({
         skip:1,
         take:2,
-        include: {
+        include:{
           Vectors_Url:{
             select:{
               url:true
