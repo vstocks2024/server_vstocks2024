@@ -265,6 +265,7 @@ export async function handleGetAllVectors(req: any, res: any, next: any) {
         include:{
           Vectors_Url:{
             select:{
+              vector_id:true,
               url:true
             }
           }
