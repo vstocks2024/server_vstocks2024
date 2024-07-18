@@ -147,3 +147,5 @@ export async function handleSupabaseGet(req: any, res: any, next: any) {
   console.log("Error",error);
   res.status(200).send(data);
 }
+
+

@@ -120,7 +120,9 @@ export async function handleAddNew2Vector(req: any, res: any, next: any) {
     const name = req.body.name;
     const description = req.body.description;
     const categories = req.body.category_id;
+    console.log(categories);
     const tags = req.body.tag_id;
+    console.log(tags);
     const vectorfile = req.file;
     const vectortype = vectorfile.mimetype;
     const format = vectorfile.mimetype.split("/")[1];
@@ -130,16 +132,14 @@ export async function handleAddNew2Vector(req: any, res: any, next: any) {
         data: {
           name: name,
           description: description,
-          categories: categories,
-          tags: tags,
           likes: 0,
           shares: 0,
           format: format,
         },
       })
-      .then(async(dbresolve) => {
+      .then(async (dbresolve) => {
         console.log(dbresolve);
-          await uploadFile(vectorbuffer, `vectors/${dbresolve.id}`, vectortype)
+        await uploadFile(vectorbuffer, `vectors/${dbresolve.id}`, vectortype)
           .then((s3resolve) => {
             console.log("From S3 Resolve", s3resolve);
             if (s3resolve[`$metadata`]["httpStatusCode"] === 200)
@@ -159,7 +159,126 @@ export async function handleAddNew2Vector(req: any, res: any, next: any) {
   }
 }
 
-export async function handleEditVectorData(req: any, res: any, next: any) {
+export async function handleAddNew3Vector(req: any, res: any, next: any) {
   try {
-  } catch (error) {}
+    if (!req) return res.status(404).send("Request Not Found");
+    const name = req.body.name;
+    const description = req.body.description;
+    const categories = req.body.category_id;
+    const tags = req.body.tag_id;
+    const vectorfile = req.file;
+    const vectortype = vectorfile.mimetype;
+    const format = vectorfile.mimetype.split("/")[1];
+    const vectorbuffer = vectorfile.buffer;
+    await prisma.vectors
+      .create({
+        data: {
+          name: name,
+          description: description,
+          likes: 0,
+          shares: 0,
+          format: format,
+        },
+      })
+      .then(async (dbresolve1) => {
+        let vectors_category_data: any[] = [];
+        categories.forEach((element: any) => {
+          vectors_category_data = [
+            ...vectors_category_data,
+            { vector_id: dbresolve1.id, category_id: element.value },
+          ];
+        });
+        await prisma.vectors_Category
+          .createMany({
+            data: vectors_category_data,
+          })
+          .then(async (dbresolve2) => {
+            let vector_tag_data: any[] = [];
+            tags.forEach((element: any) => {
+              vector_tag_data = [
+                ...vector_tag_data,
+                { vector_id: dbresolve1.id, tag_id: element.value },
+              ];
+            });
+            await prisma.vectors_Tag
+              .createMany({
+                data: vector_tag_data,
+              })
+              .then(async (dbresolve3) => {
+                await uploadFile(
+                  vectorbuffer,
+                  `vectors/${dbresolve1.id}`,
+                  vectortype
+                )
+                  .then(async (s3resolve) => {
+                    console.log("From S3 Resolve", s3resolve);
+                    if (s3resolve[`$metadata`]["httpStatusCode"] === 200)
+                      await prisma.vectors_Url
+                        .create({
+                          data: {
+                            vector_id: dbresolve1.id,
+                            url: `${process.env.NEXT_PUBLIC_BUCKET_URL}/vectors/${dbresolve1.id}`,
+                          },
+                        })
+                        .then(async (dbresolve4) => {
+                          console.log;
+                          res.status(201).send(dbresolve1);
+                        })
+                        .catch((dbreject4) => {
+                          console.log(dbreject4);
+                          res.status(400).send(dbreject4);
+                        });
+                  })
+                  .catch((s3reject) => {
+                    console.log("From S3 Reject", s3reject);
+                    res.status(400).send(s3reject);
+                  });
+              })
+              .catch((dbreject3) => {
+                console.log(dbreject3);
+                res.status(400).send(dbreject3);
+              });
+          })
+          .catch((dbreject2) => {
+            console.log(dbreject2);
+            res.status(400).send(dbreject2);
+          });
+      })
+      .catch((dbreject1) => {
+        console.log(dbreject1);
+        res.status(400).send(dbreject1);
+      });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error);
+  }
+}
+
+export async function handleGetAllVectors(req: any, res: any, next: any) {
+  try {
+    if (!req) return res.status(404).send("Request Not Found");
+    await prisma.vectors
+      .findMany({
+        skip:1,
+        take:2,
+        include: {
+          Vectors_Url:{
+            select:{
+              url:true
+            }
+          }
+        },
+      })
+      .then((dbresolve) => {
+        console.log(dbresolve);
+        res.status(200).send(dbresolve);
+      })
+      .catch((dbreject) => {
+        console.log(dbreject);
+        res.status(400).send(dbreject);
+      });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error);
+  }
 }

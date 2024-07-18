@@ -429,30 +429,30 @@ enum one_time_token_type {
   @@schema("auth")
 }
 
-
 model UserProfiles {
-    id        String   @id @db.Uuid
-    username  String?  @unique
-    fullName  String?  @map("full_name")
-    email     String?
-    phone     String?
-    avatarUrl String?  @map("avatar_url")
-    website   String?
-    createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-    updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  id        String   @id @db.Uuid
+  username  String?  @unique
+  fullName  String?  @map("full_name")
+  email     String?
+  phone     String?
+  avatarUrl String?  @map("avatar_url")
+  website   String?
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-    @@map("user_profiles")
-    @@schema("public")
+  @@map("user_profiles")
+  @@schema("public")
 }
 
-
 model Category {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  description String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+  id                  String                @id @default(uuid())
+  name                String                @unique
+  description         String
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  Vectors_Category    Vectors_Category[]
+  Animations_Category Animations_Category[]
+
   @@map("category")
   @@schema("public")
 }
@@ -465,8 +465,8 @@ model Template {
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
 
-@@map("template")
- @@schema("public")
+  @@map("template")
+  @@schema("public")
 }
 
 model Template_Video {
@@ -501,6 +501,7 @@ model Video {
   Template_Video Template_Video[]
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
+
   @@map("video")
   @@schema("public")
 }
@@ -511,48 +512,117 @@ model Image {
   Template_Image Template_Image[]
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
+
   @@map("image")
   @@schema("public")
 }
 
 model Tags {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  description String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String           @id @default(uuid())
+  name           String           @unique
+  description    String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  Vectors_Tag    Vectors_Tag[]
+  Animations_Tag Animations_Tag[]
+
   @@map("tags")
   @@schema("public")
 }
 
 model Vectors {
-  id          String   @id @default(uuid())
-  name        String
-  description String
-  categories  Json[]
-  tags        Json[]
-  likes       Int
-  shares      Int
-  format      String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id               String             @id @default(uuid())
+  name             String             @unique
+  description      String
+  likes            Int
+  shares           Int
+  format           String
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  Vectors_Category Vectors_Category[]
+  Vectors_Tag      Vectors_Tag[]
+  Vectors_Url      Vectors_Url[]
 
   @@map("vectors")
   @@schema("public")
 }
 
-model Animations {
-  id          String   @id @default(uuid())
-  name        String
-  description String
-  categories  Json[]
-  tags        Json[]
-  likes       Int
-  shares      Int
-  format      String
+model Vectors_Category {
+  vector      Vectors  @relation(fields: [vector_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  vector_id   String
+  category    Category @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  category_id String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  @@id([vector_id, category_id])
+  @@map("vectors_category")
+  @@schema("public")
+}
+
+model Vectors_Tag {
+  vector    Vectors  @relation(fields: [vector_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  vector_id String
+  tag       Tags     @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  tag_id    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([vector_id, tag_id])
+  @@map("vectors_tag")
+  @@schema("public")
+}
+
+model Vectors_Url {
+  vector    Vectors  @relation(fields: [vector_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  vector_id String
+  url       String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@id([vector_id])
+  @@map("vectors_url")
+  @@schema("public")
+}
+
+model Animations {
+  id                  String                @id @default(uuid())
+  name                String                @unique
+  description         String
+  likes               Int
+  shares              Int
+  format              String
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  Animations_Category Animations_Category[]
+  Animations_Tag      Animations_Tag[]
+
   @@map("animations")
+  @@schema("public")
+}
+
+model Animations_Category {
+  animation    Animations @relation(fields: [animation_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  animation_id String
+  category     Category   @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  category_id  String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@id([animation_id, category_id])
+  @@map("animations_category")
+  @@schema("public")
+}
+
+model Animations_Tag {
+  animation    Animations @relation(fields: [animation_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  animation_id String
+  tag          Tags       @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  tag_id       String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@id([animation_id, tag_id])
+  @@map("animations_tag")
   @@schema("public")
 }

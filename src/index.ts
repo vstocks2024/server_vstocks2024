@@ -57,7 +57,7 @@ import {
   handleListAllTags,
   handleUpdateTag,
 } from "./controllers/tags";
-import { handleAddNew2Vector, handleDeleteVector, handleEditVectorData, handleGetVectorsList } from "./controllers/vectors";
+import { handleAddNew2Vector, handleDeleteVector, handleAddNew3Vector, handleGetVectorsList, handleGetAllVectors } from "./controllers/vectors";
 import { handleListAllCustomers } from "./controllers/customers";
 import { handleDeleteAnimation, handleGetAnimationsList } from "./controllers/animations";
 
@@ -163,11 +163,14 @@ app.get("/tags/listidname", handleGetTagIdAndName);
 //Vectors API
 app.get("/vectors/listall",handleGetVectorsList);
 
-app.get("/vectors/edit/:vectorId",handleEditVectorData);
+app.get("/vectors/list_vectors",handleGetAllVectors);
+//app.get("/vectors/edit/:vectorId",handleEditVectorData);
 
 //app.post("/vectors/new", upload.single("vectorfile"), handleAddNewVector);
 
 app.post("/vectors/new2", upload.single("vectorfile"), handleAddNew2Vector);
+
+app.post("/vectors/new3", upload.single("vectorfile"), handleAddNew3Vector)
 
 app.delete("/vectors/delete/:deleteId",handleDeleteVector);
 
