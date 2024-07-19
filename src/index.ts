@@ -5,7 +5,6 @@ import {
   handleUpdateTemplate,
 } from "./controllers/templates";
 import {
-  
   handleDeleteUser,
   handleLoginUser,
   handleUserUploadImage,
@@ -16,7 +15,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 
 import { ErrorResponse, SuccessResponse } from "./utils/statusmessage";
-import  {
+import {
   handleDashboardUploadVideo,
   handleDashboardVideoDelete,
   handleDeleteVideoFromBucketAndDatabase,
@@ -57,9 +56,18 @@ import {
   handleListAllTags,
   handleUpdateTag,
 } from "./controllers/tags";
-import { handleAddNew2Vector, handleDeleteVector, handleAddNew3Vector, handleGetVectorsList, handleGetAllVectors } from "./controllers/vectors";
+import {
+  handleAddNew2Vector,
+  handleDeleteVector,
+  handleAddNew3Vector,
+  handleGetVectorsList,
+  handleGetVectorsUrl,
+} from "./controllers/vectors";
 import { handleListAllCustomers } from "./controllers/customers";
-import { handleDeleteAnimation, handleGetAnimationsList } from "./controllers/animations";
+import {
+  handleDeleteAnimation,
+  handleGetAnimationsList,
+} from "./controllers/animations";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -141,14 +149,13 @@ app.get("/categories/get/:categoryId", handleGetCategoryDataById);
 
 app.get("/categories/listidname", handleGetCategoryIdAndName);
 
-app.get("/categories/listall",handleSupabaseGet);
-
+app.get("/categories/listall", handleSupabaseGet);
 
 //End
 
 //Tags API
 
-app.post("/tags/new" , handleAddNewTag);
+app.post("/tags/new", handleAddNewTag);
 
 app.get("/tags/list_tags", handleListAllTags);
 
@@ -161,56 +168,54 @@ app.get("/tags/listidname", handleGetTagIdAndName);
 //End of Tags API
 
 //Vectors API
-app.get("/vectors/listall",handleGetVectorsList);
+app.get("/vectors/listall", handleGetVectorsList);
 
-app.get("/vectors/list_vectors",handleGetAllVectors);
-//app.get("/vectors/edit/:vectorId",handleEditVectorData);
-
-//app.post("/vectors/new", upload.single("vectorfile"), handleAddNewVector);
+app.get("/vectors/list_vectors_url", handleGetVectorsUrl);
 
 app.post("/vectors/new2", upload.single("vectorfile"), handleAddNew2Vector);
 
-app.post("/vectors/new3", upload.single("vectorfile"), handleAddNew3Vector)
+app.post("/vectors/new3", upload.single("vectorfile"), handleAddNew3Vector);
 
-app.delete("/vectors/delete/:deleteId",handleDeleteVector);
+app.delete("/vectors/delete/:deleteId", handleDeleteVector);
 
 //End of Vectors API
 
-
 //Customers API starts here
 
-app.get("/customers/listall",handleListAllCustomers);
-
+app.get("/customers/listall", handleListAllCustomers);
 
 //End of customers API
 
+//Images API
 
-//Images API 
+app.get("/images/listall", handleGetListImages);
 
-app.get("/images/listall",handleGetListImages);
+app.post(
+  "/images/singleimagefile",
+  upload.single("imagefile"),
+  handleDashboardImageUploadFile
+);
 
-app.post("/images/singleimagefile",upload.single("imagefile"),handleDashboardImageUploadFile);
+app.delete("/images/delete/:deleteId", handleDashboardImageDelete);
 
-app.delete('/images/delete/:deleteId',handleDashboardImageDelete);
-
-
-//End 
-
+//End
 
 //Videos API
-app.get("/videos/listall",handleGetListVideos);
+app.get("/videos/listall", handleGetListVideos);
 
-app.post(`/videos/singlevideofile`,upload.single("videofile"),handleDashboardUploadVideo);
+app.post(
+  `/videos/singlevideofile`,
+  upload.single("videofile"),
+  handleDashboardUploadVideo
+);
 
-app.delete('/videos/delete/:deleteId',handleDashboardVideoDelete);
+app.delete("/videos/delete/:deleteId", handleDashboardVideoDelete);
 
 //End
 
 //Animation APi
-app.get("/animations/listall",handleGetAnimationsList);
+app.get("/animations/listall", handleGetAnimationsList);
 
-app.delete("/animations/delete/:deleteId",handleDeleteAnimation);
-
-
+app.delete("/animations/delete/:deleteId", handleDeleteAnimation);
 
 //End

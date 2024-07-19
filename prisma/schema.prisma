@@ -531,14 +531,14 @@ model Tags {
 }
 
 model Vectors {
-  id               String             @id @default(uuid())
-  name             String             @unique
+  id               String            @id @default(uuid())
+  name             String            @unique
   description      String
   likes            Int
   shares           Int
   format           String
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
   Vectors_Category vector_category[]
   Vectors_Tag      vector_tag[]
   Vectors_Url      vectors_url[]
@@ -546,7 +546,6 @@ model Vectors {
   @@map("vectors")
   @@schema("public")
 }
-
 
 model vector_category {
   vector      Vectors  @relation(fields: [vector_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -575,12 +574,17 @@ model vector_tag {
 }
 
 model vectors_url {
-  vector    Vectors  @relation(fields: [vector_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  vector_id String
-  url       String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
+  vector      Vectors  @relation(fields: [vector_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  vector_id   String
+  name        String   @unique
+  description String
+  likes       Int
+  shares      Int
+  format      String
+  url         String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
   @@id([vector_id])
   @@map("vectors_url")
   @@schema("public")

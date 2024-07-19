@@ -188,10 +188,11 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
             { vector_id: dbresolve1.id, category_id: element.value },
           ];
         });
-        await prisma.vector_category.createMany({
+        await prisma.vector_category
+          .createMany({
             data: vectors_category_data,
           })
-          .then(async(dbresolve2) => {
+          .then(async (dbresolve2) => {
             console.log(dbresolve2);
             let vector_tag_data: any[] = [];
             tags.forEach((element: any) => {
@@ -204,8 +205,8 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
               .createMany({
                 data: vector_tag_data,
               })
-              .then(async(dbresolve3) => {
-                console.log(dbresolve3)
+              .then(async (dbresolve3) => {
+                console.log(dbresolve3);
                 await uploadFile(
                   vectorbuffer,
                   `vectors/${dbresolve1.id}`,
@@ -218,10 +219,15 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
                         .create({
                           data: {
                             vector_id: dbresolve1.id,
+                            name:dbresolve1.name,
+                            description: dbresolve1.description,
+                            likes: dbresolve1.likes,
+                            shares: dbresolve1.shares,
+                            format: dbresolve1.format,
                             url: `${process.env.NEXT_PUBLIC_BUCKET_URL}/vectors/${dbresolve1.id}`,
                           },
                         })
-                        .then(async(dbresolve4) => {
+                        .then(async (dbresolve4) => {
                           console.log(dbresolve4);
                           res.status(201).send(dbresolve1);
                         })
@@ -255,31 +261,22 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
   }
 }
 
-export async function handleGetAllVectors(req: any, res: any, next: any) {
+
+
+export async function handleGetVectorsUrl(req: any, res: any, next: any) {
   try {
     if (!req) return res.status(404).send("Request Not Found");
-    await prisma.vectors
-      .findMany({
-        skip:1,
-        take:2,
-        include:{
-          Vectors_Url:{
-            select:{
-              vector_id:true,
-              url:true
-            }
-          }
-        },
-      })
-      .then((dbresolve) => {
-        console.log(dbresolve);
-        res.status(200).send(dbresolve);
-      })
-      .catch((dbreject) => {
-        console.log(dbreject);
-        res.status(400).send(dbreject);
-      });
-  } catch (error) {
+    await prisma.vectors_url.findMany({})
+    .then((dbresolve) => {
+      console.log(dbresolve);
+      res.status(200).send(dbresolve);
+    })
+    .catch((dbreject) => {
+      console.log(dbreject);
+      res.status(400).send(dbreject);
+    });
+  }
+  catch(error){
     console.log(error);
     res.status(400).send(error);
   }
