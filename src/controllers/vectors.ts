@@ -219,7 +219,7 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
                         .create({
                           data: {
                             vector_id: dbresolve1.id,
-                            name:dbresolve1.name,
+                            name: dbresolve1.name,
                             description: dbresolve1.description,
                             likes: dbresolve1.likes,
                             shares: dbresolve1.shares,
@@ -261,22 +261,42 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
   }
 }
 
-
-
 export async function handleGetVectorsUrl(req: any, res: any, next: any) {
   try {
     if (!req) return res.status(404).send("Request Not Found");
-    await prisma.vectors_url.findMany({})
-    .then((dbresolve) => {
-      console.log(dbresolve);
-      res.status(200).send(dbresolve);
-    })
-    .catch((dbreject) => {
-      console.log(dbreject);
-      res.status(400).send(dbreject);
-    });
+    const currentPage = req.params.currentPage;
+    const totalVectors = await prisma.vectors_url.count();
+    const limit = 2;
+    const totalPages = Math.floor(totalVectors / limit) + 1;
+    console.log(totalPages);
+    await prisma.vectors_url
+      .findMany({
+        skip: limit * (currentPage - 1),
+        take: limit,
+      })
+      .then((dbresolve) => {
+        console.log(dbresolve);
+
+        res.status(200).send(dbresolve);
+      })
+      .catch((dbreject) => {
+        console.log(dbreject);
+        res.status(400).send(dbreject);
+      });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error);
   }
-  catch(error){
+}
+
+export async function handleGetTotalVectorPages(req: any, res: any, next: any) {
+  try {
+    if (!req) return res.status(404).send("Request Not Found");
+    const totalVectors = await prisma.vectors_url.count();
+    const limit = 2;
+    const totalPages = Math.floor(totalVectors / limit) + 1;
+    res.status(200).send({ totalPages: totalPages });
+  } catch (error) {
     console.log(error);
     res.status(400).send(error);
   }
