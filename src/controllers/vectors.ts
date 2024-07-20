@@ -292,10 +292,11 @@ export async function handleGetVectorsUrl(req: any, res: any, next: any) {
 export async function handleGetTotalVectorPages(req: any, res: any, next: any) {
   try {
     if (!req) return res.status(404).send("Request Not Found");
+    const currentPage:number = Number(req.params.currentPage);
     const totalVectors = await prisma.vectors_url.count();
     const limit = 2;
     const totalPages = Math.floor(totalVectors / limit) + 1;
-    res.status(200).send({ totalPages: totalPages });
+    res.status(200).send({currentPage:currentPage, totalPages: totalPages });
   } catch (error) {
     console.log(error);
     res.status(400).send(error);

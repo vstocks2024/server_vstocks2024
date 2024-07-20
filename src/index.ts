@@ -173,7 +173,7 @@ app.get("/vectors/listall", handleGetVectorsList);
 
 app.get("/vectors/list_vectors_url/:currentPage", handleGetVectorsUrl);
 
-app.get("/vectors/totalpages",handleGetTotalVectorPages);
+app.get("/vectors/totalpages/:currentPage",handleGetTotalVectorPages);
 
 app.post("/vectors/new2", upload.single("vectorfile"), handleAddNew2Vector);
 
