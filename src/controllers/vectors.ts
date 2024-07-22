@@ -1,8 +1,8 @@
 import { prisma } from "../prismaClient";
 import { deleteVectorFileFromBucket, uploadFile } from "../utils/s3";
-import { z } from "zod";
+
 import sizeOf from "image-size";
-import sharp from "sharp";
+
 
 // export async function handleAddNewVector(req: any, res: any, next: any) {
 //   try {
