@@ -1,7 +1,7 @@
 import { prisma } from "../prismaClient";
 import { deleteVectorFileFromBucket, uploadFile } from "../utils/s3";
 
-const sizeOf =require("image-size");
+import  sizeOf from "image-size";
 
 
 // export async function handleAddNewVector(req: any, res: any, next: any) {
