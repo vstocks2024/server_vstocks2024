@@ -63,6 +63,7 @@ import {
   handleGetVectorsList,
   handleGetVectorsUrl,
   handleGetTotalVectorPages,
+  
 } from "./controllers/vectors";
 import { handleListAllCustomers } from "./controllers/customers";
 import {
@@ -173,13 +174,15 @@ app.get("/vectors/listall", handleGetVectorsList);
 
 app.get("/vectors/list_vectors_url/:currentPage", handleGetVectorsUrl);
 
-app.get("/vectors/totalpages/:currentPage",handleGetTotalVectorPages);
+app.get("/vectors/totalpages/:currentPage", handleGetTotalVectorPages);
 
 app.post("/vectors/new2", upload.single("vectorfile"), handleAddNew2Vector);
 
 app.post("/vectors/new3", upload.single("vectorfile"), handleAddNew3Vector);
 
 app.delete("/vectors/delete/:deleteId", handleDeleteVector);
+
+
 
 //End of Vectors API
 

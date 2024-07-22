@@ -537,6 +537,10 @@ model Vectors {
   likes            Int
   shares           Int
   format           String
+  width            Float
+  height           Float
+  license          String
+  orientation      String
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
   Vectors_Category vector_category[]
@@ -581,6 +585,10 @@ model vectors_url {
   likes       Int
   shares      Int
   format      String
+  width       Float
+  height      Float
+  license     String
+  orientation String
   url         String   @unique
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

@@ -1,6 +1,8 @@
 import { prisma } from "../prismaClient";
 import { deleteVectorFileFromBucket, uploadFile } from "../utils/s3";
 import { z } from "zod";
+import sizeOf from "image-size";
+import sharp from "sharp";
 
 // export async function handleAddNewVector(req: any, res: any, next: any) {
 //   try {
@@ -135,6 +137,10 @@ export async function handleAddNew2Vector(req: any, res: any, next: any) {
           likes: 0,
           shares: 0,
           format: format,
+          width: 0,
+          height: 0,
+          license: "free",
+          orientation:"Square",
         },
       })
       .then(async (dbresolve) => {
@@ -170,6 +176,17 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
     const vectortype = vectorfile.mimetype;
     const format = vectorfile.mimetype.split("/")[1];
     const vectorbuffer = vectorfile.buffer;
+    const dimensions = sizeOf(vectorbuffer);
+    const width = dimensions.width ? dimensions.width : 0 ;
+    const height = dimensions.height ? dimensions.height :0;
+    let orientation="";
+    if( width >height )
+      orientation="Horizontal";
+    else if(width < height)
+      orientation="Vertical";
+    else
+       orientation="Square";
+
     await prisma.vectors
       .create({
         data: {
@@ -178,6 +195,10 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
           likes: 0,
           shares: 0,
           format: format,
+          width: width,
+          height: height,
+          license: "free",
+          orientation:orientation
         },
       })
       .then(async (dbresolve1) => {
@@ -225,6 +246,10 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
                             shares: dbresolve1.shares,
                             format: dbresolve1.format,
                             url: `${process.env.NEXT_PUBLIC_BUCKET_URL}/vectors/${dbresolve1.id}`,
+                            width: dbresolve1.width,
+                            height: dbresolve1.height,
+                            license: dbresolve1.license,
+                            orientation:dbresolve1.orientation
                           },
                         })
                         .then(async (dbresolve4) => {
@@ -292,13 +317,17 @@ export async function handleGetVectorsUrl(req: any, res: any, next: any) {
 export async function handleGetTotalVectorPages(req: any, res: any, next: any) {
   try {
     if (!req) return res.status(404).send("Request Not Found");
-    const currentPage:number = Number(req.params.currentPage);
+    const currentPage: number = Number(req.params.currentPage);
     const totalVectors = await prisma.vectors_url.count();
     const limit = 2;
-    const totalPages = Math.floor(totalVectors / limit) + 1;
-    res.status(200).send({currentPage:currentPage, totalPages: totalPages });
+    const totalPages =
+      totalVectors / limit === Math.floor(totalVectors / limit)
+        ? Math.floor(totalVectors / limit)
+        : Math.floor(totalVectors / limit) + 1;
+    res.status(200).send({ currentPage: currentPage, totalPages: totalPages });
   } catch (error) {
     console.log(error);
     res.status(400).send(error);
   }
 }
+
