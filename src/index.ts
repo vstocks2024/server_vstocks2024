@@ -63,13 +63,14 @@ import {
   handleGetVectorsList,
   handleGetVectorsUrl,
   handleGetTotalVectorPages,
-  
 } from "./controllers/vectors";
 import { handleListAllCustomers } from "./controllers/customers";
 import {
   handleDeleteAnimation,
   handleGetAnimationsList,
 } from "./controllers/animations";
+import { handleGetCategoryByVector } from "./controllers/vector_category";
+import { handleGetTagByVector } from "./controllers/vector_tag";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -182,15 +183,15 @@ app.post("/vectors/new3", upload.single("vectorfile"), handleAddNew3Vector);
 
 app.delete("/vectors/delete/:deleteId", handleDeleteVector);
 
+//Vector Category API
+app.get("/vector_category/categoryname/:vectorId", handleGetCategoryByVector);
 
-
-//End of Vectors API
+//Vector Tag API
+app.get("/vector_tag/tagname/:vectorId", handleGetTagByVector);
 
 //Customers API starts here
 
 app.get("/customers/listall", handleListAllCustomers);
-
-//End of customers API
 
 //Images API
 

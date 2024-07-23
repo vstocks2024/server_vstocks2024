@@ -1,8 +1,7 @@
 import { prisma } from "../prismaClient";
 import { deleteVectorFileFromBucket, uploadFile } from "../utils/s3";
 
-import  sizeOf from "image-size";
-
+import sizeOf from "image-size";
 
 // export async function handleAddNewVector(req: any, res: any, next: any) {
 //   try {
@@ -140,7 +139,7 @@ export async function handleAddNew2Vector(req: any, res: any, next: any) {
           width: 0,
           height: 0,
           license: "free",
-          orientation:"Square",
+          orientation: "Square",
         },
       })
       .then(async (dbresolve) => {
@@ -177,15 +176,12 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
     const format = vectorfile.mimetype.split("/")[1];
     const vectorbuffer = vectorfile.buffer;
     const dimensions = sizeOf(vectorbuffer);
-    const width = dimensions.width ? dimensions.width : 0 ;
-    const height = dimensions.height ? dimensions.height :0;
-    let orientation="";
-    if( width >height )
-      orientation="Horizontal";
-    else if(width < height)
-      orientation="Vertical";
-    else
-       orientation="Square";
+    const width = dimensions.width ? dimensions.width : 0;
+    const height = dimensions.height ? dimensions.height : 0;
+    let orientation = "";
+    if (width > height) orientation = "Horizontal";
+    else if (width < height) orientation = "Vertical";
+    else orientation = "Square";
 
     await prisma.vectors
       .create({
@@ -198,7 +194,7 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
           width: width,
           height: height,
           license: "free",
-          orientation:orientation
+          orientation: orientation,
         },
       })
       .then(async (dbresolve1) => {
@@ -249,7 +245,7 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
                             width: dbresolve1.width,
                             height: dbresolve1.height,
                             license: dbresolve1.license,
-                            orientation:dbresolve1.orientation
+                            orientation: dbresolve1.orientation,
                           },
                         })
                         .then(async (dbresolve4) => {
