@@ -69,7 +69,7 @@ import {
   handleDeleteAnimation,
   handleGetAnimationsList,
 } from "./controllers/animations";
-import { handleGetCategoryByVector } from "./controllers/vector_category";
+import { handleGetCategoryByVector, handleGetTotalVectorPagesByCategoryName, handleGetVectorByCategoryName } from "./controllers/vector_category";
 import { handleGetTagByVector } from "./controllers/vector_tag";
 
 const storage = multer.memoryStorage();
@@ -185,6 +185,11 @@ app.delete("/vectors/delete/:deleteId", handleDeleteVector);
 
 //Vector Category API
 app.get("/vector_category/categoryname/:vectorId", handleGetCategoryByVector);
+
+
+app.get("/vector_category/vectorlist/:categoryName/:currentPage",handleGetVectorByCategoryName)
+
+app.get("/vector_category/totalpages/:categoryName/:currentPage", handleGetTotalVectorPagesByCategoryName);
 
 //Vector Tag API
 app.get("/vector_tag/tagname/:vectorId", handleGetTagByVector);

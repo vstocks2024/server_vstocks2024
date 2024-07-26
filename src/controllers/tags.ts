@@ -8,7 +8,7 @@ export async function handleAddNewTag(req: any, res: any, next: any) {
 
     await prisma.tags
       .create({
-        data: { name: "#".concat(name), description: description },
+        data: { name: name, description: description },
       })
       .then((dbresolve) => {
         console.log("DBRESOLVE:", dbresolve);
@@ -59,59 +59,55 @@ export async function handleDeleteTag(req: any, res: any, next: any) {
   }
 }
 
-
-
-export async function handleGetTagIdAndName(req: any, res: any, next: any){
-  try{
-    if(!req) res.status(404).send("Request Not Found");
-  await prisma.tags.findMany({
-      select: {
-       id:true,
-       name:true
-      },
-    })
-    .then((dbresolve)=>{
-      console.log(dbresolve);
-      res.status(200).send(dbresolve);
-    })
-    .catch((dbreject)=>{
-      console.log(dbreject);
-      res.status(400).send(dbreject);
-    })
-
-  }
-  catch(error){
+export async function handleGetTagIdAndName(req: any, res: any, next: any) {
+  try {
+    if (!req) res.status(404).send("Request Not Found");
+    await prisma.tags
+      .findMany({
+        select: {
+          id: true,
+          name: true,
+        },
+      })
+      .then((dbresolve) => {
+        console.log(dbresolve);
+        res.status(200).send(dbresolve);
+      })
+      .catch((dbreject) => {
+        console.log(dbreject);
+        res.status(400).send(dbreject);
+      });
+  } catch (error) {
     res.status(404).send(error);
-}
+  }
 }
 
-
-export async function handleUpdateTag(req: any, res: any, next: any){
-  try{
-    if(!req) res.status(404).send("Request Not Found");
+export async function handleUpdateTag(req: any, res: any, next: any) {
+  try {
+    if (!req) res.status(404).send("Request Not Found");
     const bodyData = req.body;
-    const {id, name, description} = bodyData;
+    const { id, name, description } = bodyData;
     // console.log("ID:", id);
     // console.log("Name:", name);
     // console.log("Description:", description);
-    await prisma.tags.update({
-      where: {
-        id: id
-      },
-      data: {
-        name: "#".concat(name),
-        description: description
-      }
-    })
-    .then((dbresolve)=>{
-      console.log(dbresolve);
-      res.sendStatus(200);
-    })
-    .catch((dbreject)=>{
-      res.status(400).send(dbreject);
-    })
-  }
-  catch(error){
+    await prisma.tags
+      .update({
+        where: {
+          id: id,
+        },
+        data: {
+          name: "#".concat(name),
+          description: description,
+        },
+      })
+      .then((dbresolve) => {
+        console.log(dbresolve);
+        res.sendStatus(200);
+      })
+      .catch((dbreject) => {
+        res.status(400).send(dbreject);
+      });
+  } catch (error) {
     res.status(404).send(error);
   }
 }

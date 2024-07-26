@@ -6,8 +6,8 @@ export async function handleGetTagByVector(req: any, res: any, next: any) {
     const vector_id = req.params.vectorId;
     await prisma.vector_tag
       .findMany({
-        select: {
-          tag_id: true,
+        select:{
+          tag_id:true
         },
         where: {
           vector_id: vector_id,
@@ -15,23 +15,19 @@ export async function handleGetTagByVector(req: any, res: any, next: any) {
       })
       .then(async (dbresolve1) => {
         console.log(dbresolve1);
-        await prisma.vector_tag
+        let tag_id_arr:string[]=[];
+        dbresolve1.forEach((item)=>{
+          tag_id_arr=[...tag_id_arr,item.tag_id];
+        })
+
+        await prisma.tags
           .findMany({
-            where: {
-              OR: dbresolve1,
-              NOT:{
-                vector_id:vector_id
-              }
-            },
+          where:{
+            id :{ in : tag_id_arr}
+          }
           })
-          .then(async (dbresolve2) => {
-            // let uniqueArray:any[]=[];
-            // dbresolve2.forEach(item => {
-            //     if (uniqueArray.findIndex(element => element.vector_id === item.vector_id) === -1) {
-            //         uniqueArray.push(item);
-            //     }
-            // });
-            // res.status(200).send(uniqueArray);
+          .then((dbresolve2) => {
+            console.log(dbresolve2);
             res.status(200).send(dbresolve2);
           })
           .catch((dbreject2) => {
