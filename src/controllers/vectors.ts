@@ -179,9 +179,9 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
     const width = dimensions.width ? dimensions.width : 0;
     const height = dimensions.height ? dimensions.height : 0;
     let orientation = "";
-    if (width > height) orientation = "Horizontal";
-    else if (width < height) orientation = "Vertical";
-    else orientation = "Square";
+    if (width > height) orientation = "horizontal";
+    else if (width < height) orientation = "vertical";
+    else orientation = "square";
 
     await prisma.vectors
       .create({
@@ -288,12 +288,37 @@ export async function handleGetVectorsUrl(req: any, res: any, next: any) {
     const currentPage = req.params.currentPage;
     const totalVectors = await prisma.vectors_url.count();
     const limit = 2;
-    const totalPages = Math.floor(totalVectors / limit) + 1;
-    console.log(totalPages);
+    const totalPages =
+      totalVectors / limit === Math.floor(totalVectors / limit)
+        ? Math.floor(totalVectors / limit)
+        : Math.floor(totalVectors / limit) + 1;
+    const license = req.params.currentLicense;
+    const orientation = req.params.currentOrientation;
+    const format = req.params.currentFormat;
+
+    let licenses: string[] = [];
+    if (license === "all") {
+      licenses = [...licenses, "free", "premium"];
+    } else {
+      licenses = [...licenses, license];
+    }
+
+    let orientations: string[] = [];
+    if (orientation === "all") {
+      orientations = [...orientations, "Square", "Horizontal", "Vertical"];
+    } else {
+      orientations = [...orientations, orientation];
+    }
+
+    // res.status(200).send(orientations);
     await prisma.vectors_url
       .findMany({
-        skip: limit * (currentPage - 1),
-        take: limit,
+        // skip: limit * (currentPage - 1),
+        // take: limit,
+        where:{
+          license: { in: licenses },
+          orientation:{ in:orientations}
+        }
       })
       .then((dbresolve) => {
         console.log(dbresolve);
@@ -326,4 +351,3 @@ export async function handleGetTotalVectorPages(req: any, res: any, next: any) {
     res.status(400).send(error);
   }
 }
-
