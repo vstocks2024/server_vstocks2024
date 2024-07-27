@@ -1,4 +1,5 @@
 import { prisma } from "../prismaClient";
+import { limit } from "../utils/types";
 
 export async function handleGetCategoryByVector(req: any, res: any, next: any) {
   try {
@@ -68,7 +69,7 @@ export async function handleGetVectorByCategoryName(
     const license = req.params.currentLicense;
     const orientation = req.params.currentOrientation;
     const format = req.params.currentFormat;
-    const limit:number=2;
+    
     
     let licenses: string[] = [];
     if (license === "all") {
@@ -155,7 +156,7 @@ export async function handleGetTotalVectorPagesByCategoryName(
     if (!req) return res.status(404).send("Request Not Found");
     const currentpage: number = Number(req.params.currentPage);
     const categoryname: string = req.params.categoryName;
-    const limit: number = 2;
+    
     let totalVectors: number = 0;
 
     await prisma.category

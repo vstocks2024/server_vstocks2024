@@ -1,5 +1,6 @@
 import { prisma } from "../prismaClient";
 import { deleteVectorFileFromBucket, uploadFile } from "../utils/s3";
+import { limit } from "../utils/types";
 
 import sizeOf from "image-size";
 
@@ -287,7 +288,7 @@ export async function handleGetVectorsUrl(req: any, res: any, next: any) {
     if (!req) return res.status(404).send("Request Not Found");
     const currentPage = req.params.currentPage;
     const totalVectors = await prisma.vectors_url.count();
-    const limit = 5;
+
     const totalPages =
       totalVectors / limit === Math.floor(totalVectors / limit)
         ? Math.floor(totalVectors / limit)
@@ -318,102 +319,95 @@ export async function handleGetVectorsUrl(req: any, res: any, next: any) {
       formats = [...formats, format];
     }
 
-    if(sort==="relevance"){
-    await prisma.vectors_url
-      .findMany({
-        skip: limit * (currentPage - 1),
-        take: limit,
-        where: {
-          license: { in: licenses },
-          orientation: { in: orientations },
-          format: { in: formats },
-        },
-        orderBy:{
-          createdAt:"desc"
-        }
-      })
-      .then((dbresolve) => {
-        console.log(dbresolve);
-        res.status(200).send(dbresolve);
-      })
-      .catch((dbreject) => {
-        console.log(dbreject);
-        res.status(400).send(dbreject);
-      });
-    }
-    else if(sort==="popular"){
+    if (sort === "relevance") {
       await prisma.vectors_url
-      .findMany({
-        skip: limit * (currentPage - 1),
-        take: limit,
-        where: {
-          license: { in: licenses },
-          orientation: { in: orientations },
-          format: { in: formats },
-        },
-        orderBy:{
-          likes:"desc"
-        }
-      })
-      .then((dbresolve) => {
-        console.log(dbresolve);
-        res.status(200).send(dbresolve);
-      })
-      .catch((dbreject) => {
-        console.log(dbreject);
-        res.status(400).send(dbreject);
-      });
-
-    }
-    else if(sort==="alpha"){
+        .findMany({
+          skip: limit * (currentPage - 1),
+          take: limit,
+          where: {
+            license: { in: licenses },
+            orientation: { in: orientations },
+            format: { in: formats },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        })
+        .then((dbresolve) => {
+          console.log(dbresolve);
+          res.status(200).send(dbresolve);
+        })
+        .catch((dbreject) => {
+          console.log(dbreject);
+          res.status(400).send(dbreject);
+        });
+    } else if (sort === "popular") {
       await prisma.vectors_url
-      .findMany({
-        skip: limit * (currentPage - 1),
-        take: limit,
-        where: {
-          license: { in: licenses },
-          orientation: { in: orientations },
-          format: { in: formats },
-        },
-        orderBy:{
-           name:"asc"
-        }
-      })
-      .then((dbresolve) => {
-        console.log(dbresolve);
-        res.status(200).send(dbresolve);
-      })
-      .catch((dbreject) => {
-        console.log(dbreject);
-        res.status(400).send(dbreject);
-      });
-
-    }
-    else if(sort==="date"){
+        .findMany({
+          skip: limit * (currentPage - 1),
+          take: limit,
+          where: {
+            license: { in: licenses },
+            orientation: { in: orientations },
+            format: { in: formats },
+          },
+          orderBy: {
+            likes: "desc",
+          },
+        })
+        .then((dbresolve) => {
+          console.log(dbresolve);
+          res.status(200).send(dbresolve);
+        })
+        .catch((dbreject) => {
+          console.log(dbreject);
+          res.status(400).send(dbreject);
+        });
+    } else if (sort === "alpha") {
       await prisma.vectors_url
-      .findMany({
-        skip: limit * (currentPage - 1),
-        take: limit,
-        where: {
-          license: { in: licenses },
-          orientation: { in: orientations },
-          format: { in: formats },
-        },
-        orderBy:{
-            createdAt:"asc"
-        }
-      })
-      .then((dbresolve) => {
-        console.log(dbresolve);
-        res.status(200).send(dbresolve);
-      })
-      .catch((dbreject) => {
-        console.log(dbreject);
-        res.status(400).send(dbreject);
-      });
-
+        .findMany({
+          skip: limit * (currentPage - 1),
+          take: limit,
+          where: {
+            license: { in: licenses },
+            orientation: { in: orientations },
+            format: { in: formats },
+          },
+          orderBy: {
+            name: "asc",
+          },
+        })
+        .then((dbresolve) => {
+          console.log(dbresolve);
+          res.status(200).send(dbresolve);
+        })
+        .catch((dbreject) => {
+          console.log(dbreject);
+          res.status(400).send(dbreject);
+        });
+    } else if (sort === "date") {
+      await prisma.vectors_url
+        .findMany({
+          skip: limit * (currentPage - 1),
+          take: limit,
+          where: {
+            license: { in: licenses },
+            orientation: { in: orientations },
+            format: { in: formats },
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        })
+        .then((dbresolve) => {
+          console.log(dbresolve);
+          res.status(200).send(dbresolve);
+        })
+        .catch((dbreject) => {
+          console.log(dbreject);
+          res.status(400).send(dbreject);
+        });
     }
-
   } catch (error) {
     console.log(error);
     res.status(400).send(error);
@@ -427,7 +421,6 @@ export async function handleGetTotalVectorPages(req: any, res: any, next: any) {
     const license = req.params.currentLicense;
     const orientation = req.params.currentOrientation;
     const format = req.params.currentFormat;
-    
 
     let licenses: string[] = [];
     if (license === "all") {
@@ -456,7 +449,7 @@ export async function handleGetTotalVectorPages(req: any, res: any, next: any) {
         format: { in: formats },
       },
     });
-    const limit = 2;
+
     const totalPages =
       totalVectors / limit === Math.floor(totalVectors / limit)
         ? Math.floor(totalVectors / limit)
