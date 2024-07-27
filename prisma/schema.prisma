@@ -531,21 +531,21 @@ model Tags {
 }
 
 model Vectors {
-  id                String            @id @default(uuid())
-  name              String            @unique
-  description       String
-  likes             Int
-  shares            Int
-  format            String
-  width             Float
-  height            Float
-  subscription_type String
-  orientation       String
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-  Vectors_Category  vector_category[]
-  Vectors_Tag       vector_tag[]
-  Vectors_Url       vectors_url[]
+  id               String            @id @default(uuid())
+  name             String            @unique
+  description      String
+  likes            Int
+  shares           Int
+  format           String
+  width            Float
+  height           Float
+  license          String
+  orientation      String
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  Vectors_Category vector_category[]
+  Vectors_Tag      vector_tag[]
+  Vectors_Url      vectors_url[]
 
   @@map("vectors")
   @@schema("public")
@@ -578,20 +578,20 @@ model vector_tag {
 }
 
 model vectors_url {
-  vector            Vectors  @relation(fields: [vector_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  vector_id         String
-  name              String   @unique
-  description       String
-  likes             Int
-  shares            Int
-  format            String
-  width             Float
-  height            Float
-  subscription_type String
-  orientation       String
-  url               String   @unique
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  vector      Vectors  @relation(fields: [vector_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  vector_id   String
+  name        String   @unique
+  description String
+  likes       Int
+  shares      Int
+  format      String
+  width       Float
+  height      Float
+  license     String
+  orientation String
+  url         String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@id([vector_id])
   @@map("vectors_url")

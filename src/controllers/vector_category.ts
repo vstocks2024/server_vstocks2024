@@ -65,14 +65,14 @@ export async function handleGetVectorByCategoryName(
     if (!req) return res.status(404).send("Request Not Found");
     const categoryname = req.params.categoryName;
     const currentpage = req.params.currentPage;
-    const subscription_type = req.params.subscription_type;
+    const license = req.params.license;
     let licenses:string[]=[];
 
-    if (subscription_type==="both"){
-      licenses=["free","subscription_type"];
+    if (license==="both"){
+      licenses=[...licenses,"free","license"];
     }
     else{
-      licenses=[subscription_type];
+      licenses=[...licenses,license];
     }
     await prisma.category
       .findUnique({
@@ -104,7 +104,7 @@ export async function handleGetVectorByCategoryName(
               .findMany({
                 where: {
                   vector_id: { in: vector_id_arr },
-                  subscription_type : {in : licenses},
+                  license : {in : licenses},
                 },
               })
               .then((dbresolve3) => {
