@@ -187,9 +187,9 @@ app.delete("/vectors/delete/:deleteId", handleDeleteVector);
 app.get("/vector_category/categoryname/:vectorId", handleGetCategoryByVector);
 
 
-app.get("/vector_category/vectorlist/:categoryName/:currentPage",handleGetVectorByCategoryName)
+app.get("/vector_category/vectorlist/:categoryName/:currentPage/:license",handleGetVectorByCategoryName);
 
-app.get("/vector_category/totalpages/:categoryName/:currentPage", handleGetTotalVectorPagesByCategoryName);
+app.get("/vector_category/totalpages/:categoryName/:currentPage/:license", handleGetTotalVectorPagesByCategoryName);
 
 //Vector Tag API
 app.get("/vector_tag/tagname/:vectorId", handleGetTagByVector);

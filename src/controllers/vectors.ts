@@ -138,7 +138,7 @@ export async function handleAddNew2Vector(req: any, res: any, next: any) {
           format: format,
           width: 0,
           height: 0,
-          license: "free",
+          subscription_type: "free",
           orientation: "Square",
         },
       })
@@ -193,7 +193,7 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
           format: format,
           width: width,
           height: height,
-          license: "free",
+          subscription_type: "free",
           orientation: orientation,
         },
       })
@@ -244,7 +244,7 @@ export async function handleAddNew3Vector(req: any, res: any, next: any) {
                             url: `${process.env.NEXT_PUBLIC_BUCKET_URL}/vectors/${dbresolve1.id}`,
                             width: dbresolve1.width,
                             height: dbresolve1.height,
-                            license: dbresolve1.license,
+                            subscription_type: dbresolve1.subscription_type,
                             orientation: dbresolve1.orientation,
                           },
                         })

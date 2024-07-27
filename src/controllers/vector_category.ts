@@ -65,6 +65,15 @@ export async function handleGetVectorByCategoryName(
     if (!req) return res.status(404).send("Request Not Found");
     const categoryname = req.params.categoryName;
     const currentpage = req.params.currentPage;
+    const subscription_type = req.params.subscription_type;
+    let licenses:string[]=[];
+
+    if (subscription_type==="both"){
+      licenses=["free","subscription_type"];
+    }
+    else{
+      licenses=[subscription_type];
+    }
     await prisma.category
       .findUnique({
         select: {
@@ -95,6 +104,7 @@ export async function handleGetVectorByCategoryName(
               .findMany({
                 where: {
                   vector_id: { in: vector_id_arr },
+                  subscription_type : {in : licenses},
                 },
               })
               .then((dbresolve3) => {
@@ -120,41 +130,50 @@ export async function handleGetVectorByCategoryName(
   }
 }
 
-
-export async function handleGetTotalVectorPagesByCategoryName(req: any, res: any, next: any) {
+export async function handleGetTotalVectorPagesByCategoryName(
+  req: any,
+  res: any,
+  next: any
+) {
   try {
     if (!req) return res.status(404).send("Request Not Found");
-      const currentpage:number=Number(req.params.currentPage);
-    const categoryname:string= req.params.categoryName;
-    const limit:number=2;
-    let totalVectors:number = 0
-    
-    await prisma.category.findUnique({
-      where:{
-        name:categoryname,
-      }
-    }).then(async(dbresolve1)=>{
-      await prisma.vector_category.count({
-        where:{
-          category_id:dbresolve1?.id,
-        }
-      }).then((dbresolve2)=>{
-        totalVectors=dbresolve2;
-        const totalPages = totalVectors / limit === Math.floor(totalVectors / limit)
-          ? Math.floor(totalVectors / limit)
-          : Math.floor(totalVectors / limit) + 1;
-      res.status(200).send({ currentPage: currentpage, totalPages: totalPages });
+    const currentpage: number = Number(req.params.currentPage);
+    const categoryname: string = req.params.categoryName;
+    const limit: number = 2;
+    let totalVectors: number = 0;
 
-      }).catch((dbreject2)=>{
-        console.log(dbreject2);
-        res.status(400).send(dbreject2);
+    await prisma.category
+      .findUnique({
+        where: {
+          name: categoryname,
+        },
       })
-    }).catch((dbreject1)=>{
-      console.log(dbreject1);
-      res.status(400).send(dbreject1);
-    })
-    
-  
+      .then(async (dbresolve1) => {
+        await prisma.vector_category
+          .count({
+            where: {
+              category_id: dbresolve1?.id,
+            },
+          })
+          .then((dbresolve2) => {
+            totalVectors = dbresolve2;
+            const totalPages =
+              totalVectors / limit === Math.floor(totalVectors / limit)
+                ? Math.floor(totalVectors / limit)
+                : Math.floor(totalVectors / limit) + 1;
+            res
+              .status(200)
+              .send({ currentPage: currentpage, totalPages: totalPages });
+          })
+          .catch((dbreject2) => {
+            console.log(dbreject2);
+            res.status(400).send(dbreject2);
+          });
+      })
+      .catch((dbreject1) => {
+        console.log(dbreject1);
+        res.status(400).send(dbreject1);
+      });
   } catch (error) {
     console.log(error);
     res.status(400).send(error);
