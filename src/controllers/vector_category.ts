@@ -65,82 +65,81 @@ export async function handleGetVectorByCategoryName(
     if (!req) return res.status(404).send("Request Not Found");
     const categoryname = req.params.categoryName;
     const currentpage = req.params.currentPage;
-    const license = req.params.license;
-    const orientation = req.params.orientation;
-    const format = req.params.format;
-    // let licenses: string[] = [];
-    // if (license === "both") {
-    //   licenses = [...licenses, "free", "license"];
-    // } else {
-    //   licenses = [...licenses, license];
-    // }
-
+    const license = req.params.currentLicense;
+    const orientation = req.params.currentOrientation;
+    const format = req.params.currentFormat;
+    const limit:number=2;
     
-    // let orientations: string[] = [];
-    // if (orientation === "all") {
-    //   orientations = [...orientations, "Square", "Horizontal", "Vertical"];
-    // } else {
-    //   orientations = [...orientations, orientation];
-    // }
-    
-    // let formats: string[] = [];
-    // if (format === "all") {
-    //   formats = [...formats, "Square", "Horizontal", "Vertical"];
-    // } else {
-    //   formats = [...formats, format];
-    // }
-    // await prisma.category
-    //   .findUnique({
-    //     select: {
-    //       id: true,
-    //     },
-    //     where: {
-    //       name: categoryname,
-    //     },
-    //   })
-    //   .then(async (dbresolve1) => {
-    //     await prisma.vector_category
-    //       .findMany({
-    //         skip: (currentpage - 1) * 2,
-    //         take: 2,
-    //         select: {
-    //           vector_id: true,
-    //         },
-    //         where: {
-    //           category_id: dbresolve1?.id,
-    //         },
-    //       })
-    //       .then(async (dbresolve2) => {
-    //         let vector_id_arr: string[] = [];
-    //         dbresolve2.forEach((ele) => {
-    //           vector_id_arr = [...vector_id_arr, ele.vector_id];
-    //         });
-    //         await prisma.vectors_url
-    //           .findMany({
-    //             where: {
-    //               vector_id: { in: vector_id_arr },
-    //               license: { in: licenses },
-    //               orientation: { in: orientations },
-    //               format: { in: formats },
-    //             },
-    //           })
-    //           .then((dbresolve3) => {
-    //             res.status(200).send(dbresolve3);
-    //           })
-    //           .catch((dbreject3) => {
-    //             console.log(dbreject3);
-    //             res.status(400).send(dbreject3);
-    //           });
-    //       })
-    //       .catch((dbreject2) => {
-    //         console.log(dbreject2);
-    //         res.status(400).send(dbreject2);
-    //       });
-    //   })
-    //   .catch((dbreject1) => {
-    //     console.log(dbreject1);
-    //     res.status(400).send(dbreject1);
-    //   });
+    let licenses: string[] = [];
+    if (license === "all") {
+      licenses = [...licenses, "free", "license"];
+    } else {
+      licenses = [...licenses, license];
+    }
+    let orientations: string[] = [];
+    if (orientation === "all") {
+      orientations = [...orientations, "square", "horizontal", "vertical"];
+    } else {
+      orientations = [...orientations, orientation];
+    }
+        let formats: string[] = [];
+    if (format === "all") {
+      formats = [...formats, "ai", "svg", "jpeg", "jpg"];
+    } else {
+      formats = [...formats, format];
+    }
+    await prisma.category
+      .findUnique({
+        select: {
+          id: true,
+        },
+        where: {
+          name: categoryname,
+        },
+      })
+      .then(async (dbresolve1) => {
+        await prisma.vector_category
+          .findMany({
+            skip: (currentpage - 1) * limit,
+            take: limit,
+            select: {
+              vector_id: true,
+            },
+            where: {
+              category_id: dbresolve1?.id,
+            },
+          })
+          .then(async (dbresolve2) => {
+            let vector_id_arr: string[] = [];
+            dbresolve2.forEach((ele) => {
+              vector_id_arr = [...vector_id_arr, ele.vector_id];
+            });
+            await prisma.vectors_url
+              .findMany({
+                where: {
+                  vector_id: { in: vector_id_arr },
+                  license: { in: licenses },
+                  orientation: { in: orientations },
+                  format: { in: formats },
+                },
+              })
+              .then((dbresolve3) => {
+                res.status(200).send(dbresolve3);
+              })
+              .catch((dbreject3) => {
+                console.log(dbreject3);
+                res.status(400).send(dbreject3);
+              });
+          })
+          .catch((dbreject2) => {
+            console.log(dbreject2);
+            res.status(400).send(dbreject2);
+          });
+      })
+      .catch((dbreject1) => {
+        console.log(dbreject1);
+        res.status(400).send(dbreject1);
+      });
   } catch (error) {
     console.log(error);
     res.status(400).send(error);

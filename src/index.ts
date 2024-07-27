@@ -173,9 +173,9 @@ app.get("/tags/listidname", handleGetTagIdAndName);
 //Vectors API
 app.get("/vectors/listall", handleGetVectorsList);
 
-app.get("/vectors/list_vectors_url/:currentPage/:currentLicense/:currentOrientation/:currentFormat", handleGetVectorsUrl);
+app.get("/vectors/list_vectors_url/:currentPage/:currentLicense/:currentOrientation/:currentFormat/:currentSort", handleGetVectorsUrl);
 
-app.get("/vectors/totalpages/:currentPage/:license/:currentOrientation/:currentFormat", handleGetTotalVectorPages);
+app.get("/vectors/totalpages/:currentPage/:currentLicense/:currentOrientation/:currentFormat", handleGetTotalVectorPages);
 
 app.post("/vectors/new2", upload.single("vectorfile"), handleAddNew2Vector);
 
@@ -187,9 +187,9 @@ app.delete("/vectors/delete/:deleteId", handleDeleteVector);
 app.get("/vector_category/categoryname/:vectorId", handleGetCategoryByVector);
 
 
-app.get("/vector_category/vectorlist/:categoryName/:currentPage/:license/:currentOrientation/:currentFormat",handleGetVectorByCategoryName);
+app.get("/vector_category/vectorlist/:categoryName/:currentPage/:currentLicense/:currentOrientation/:currentFormat",handleGetVectorByCategoryName);
 
-app.get("/vector_category/totalpages/:categoryName/:currentPage/:license/:currentOrientation/:currentFormat", handleGetTotalVectorPagesByCategoryName);
+app.get("/vector_category/totalpages/:categoryName/:currentPage/:currentLicense/:currentOrientation/:currentFormat", handleGetTotalVectorPagesByCategoryName);
 
 //Vector Tag API
 app.get("/vector_tag/tagname/:vectorId", handleGetTagByVector);
