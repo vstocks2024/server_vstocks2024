@@ -315,7 +315,10 @@ export async function handleGetVectorsUrl(req: any, res: any, next: any) {
     let formats: string[] = [];
     if (format === "all") {
       formats = [...formats, "ai", "svg", "jpeg", "jpg"];
-    } else {
+    } else if(format==="jpeg"){
+      formats = [...formats, "jpg","jpeg"];
+    } 
+    else {
       formats = [...formats, format];
     }
 
@@ -439,7 +442,10 @@ export async function handleGetTotalVectorPages(req: any, res: any, next: any) {
     let formats: string[] = [];
     if (format === "all") {
       formats = [...formats, "ai", "svg", "jpeg", "jpg"];
-    } else {
+    } else if(format==="jpeg"){
+      formats = [...formats, "jpg","jpeg"];
+    } 
+    else {
       formats = [...formats, format];
     }
     const totalVectors = await prisma.vectors_url.count({
