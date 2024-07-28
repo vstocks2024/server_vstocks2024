@@ -1,1 +1,1 @@
-export const limit:number=5
+export const limit:number=2
