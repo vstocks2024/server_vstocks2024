@@ -72,6 +72,7 @@ import {
 } from "./controllers/animations";
 import { handleGetCategoryByVector, handleGetTotalVectorPagesByCategoryName, handleGetVectorByCategoryName } from "./controllers/vector_category";
 import { handleGetTagByVector } from "./controllers/vector_tag";
+import { handleGetVectorsNameSearch } from "./controllers/vectors_url";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -233,4 +234,6 @@ app.get("/animations/listall", handleGetAnimationsList);
 
 app.delete("/animations/delete/:deleteId", handleDeleteAnimation);
 
-//End
+//Vector_Url API
+
+app.get("/vectors_url/searchvectorname/:currentSearchWord",handleGetVectorsNameSearch);
