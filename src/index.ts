@@ -52,6 +52,7 @@ import {
 import {
   handleAddNewTag,
   handleDeleteTag,
+  handleGetRandomTags,
   handleGetTagIdAndName,
   handleListAllTags,
   handleUpdateTag,
@@ -167,6 +168,8 @@ app.delete("/tags/delete/:deleteId", handleDeleteTag);
 app.put("/tags/update", handleUpdateTag);
 
 app.get("/tags/listidname", handleGetTagIdAndName);
+
+app.get("/tags/randomtags",handleGetRandomTags);
 
 //End of Tags API
 
