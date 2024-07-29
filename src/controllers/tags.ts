@@ -112,26 +112,24 @@ export async function handleUpdateTag(req: any, res: any, next: any) {
   }
 }
 
-
 export async function handleGetRandomTags(req: any, res: any, next: any) {
-  try{
-    if (!req) res.status(404).send("Request Not Found");
-
-    //const randomnumber:number=Math.floor(Math.random()*10);
-
-    await prisma.tags.findMany({
-      take:5 
-    }).then((dbresolve)=>{
-      res.status(200).send(dbresolve);
-    }).catch((dbreject)=>{
-      res.status(400).send(dbreject);
-    })
-
-  }
-  catch(error){
+  try {
+    if (!req) return  res.status(404).send("Request Not Found");
+    const randomnumber: number = Math.floor(Math.random() * 10);
+    console.log(randomnumber);
+    await prisma.tags
+      .findMany({
+        take: 5,
+        skip: randomnumber,
+      })
+      .then((dbresolve) => {
+        res.status(200).send(dbresolve);
+      })
+      .catch((dbreject) => {
+        res.status(400).send(dbreject);
+      });
+  } catch (error) {
     console.log(error);
     res.status(404).send(error);
-
   }
 }
-
