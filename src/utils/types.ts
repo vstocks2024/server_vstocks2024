@@ -1,1 +1,1 @@
-export const limit:number=2
+export const limit:number=7;
