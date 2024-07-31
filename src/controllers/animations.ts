@@ -20,26 +20,39 @@ export async function handleGetAnimationsList(req: any, res: any, next: any) {
 }
 
 export async function handleDeleteAnimation(req: any, res: any, next: any) {
-    try
-    {
-        if (!req) res.status(404).send("No Request Found");
-        const animationId=req.params.deleteId;
-        await prisma.template.delete({where:{
-            id:animationId
-        }})
-        .then((dbresolve)=>{
-            console.log(dbresolve);
-            res.sendStatus(200);
-        })
-        .catch((dbreject)=>{
-            console.log(dbreject);
-            res.status(400).send(dbreject);
-        })
+  try {
+    if (!req) res.status(404).send("No Request Found");
+    const animationId = req.params.deleteId;
+    await prisma.template
+      .delete({
+        where: {
+          id: animationId,
+        },
+      })
+      .then((dbresolve) => {
+        console.log(dbresolve);
+        res.sendStatus(200);
+      })
+      .catch((dbreject) => {
+        console.log(dbreject);
+        res.status(400).send(dbreject);
+      });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error);
+  }
+}
 
-    }
-    catch(error){
-        console.log(error);
-        res.status(400).send(error);
-    }
-
+export async function handleCreateNewAnimation(req: any, res: any, next: any) {
+  try {
+    if (!req) res.status(404).send("No Request Found");
+    const name=req.body.name;
+    const thumbnail=req.file;
+    console.log(name);
+    console.log(thumbnail);
+    res.sendStatus(201);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error);
+  }
 }

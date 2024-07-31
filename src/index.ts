@@ -67,6 +67,7 @@ import {
 } from "./controllers/vectors";
 import { handleListAllCustomers } from "./controllers/customers";
 import {
+  handleCreateNewAnimation,
   handleDeleteAnimation,
   handleGetAnimationsList,
 } from "./controllers/animations";
@@ -235,6 +236,8 @@ app.get("/animations/listall", handleGetAnimationsList);
 
 app.delete("/animations/delete/:deleteId", handleDeleteAnimation);
 
+app.post("/animations/create",upload.single("thumbnail"),handleCreateNewAnimation);
+
 //Vector_Url API
 
 app.get("/vectors_url/searchvectorname/:currentSearchWord",handleGetVectorsNameSearch);
@@ -246,4 +249,4 @@ app.get("/animations_tags/listtags",handleGetTagsIdAndName);
 
 //Vector_Url API
 
-app.get(`/vectors_url/randomvector`,handleGetHomePageVector)
+app.get(`/vectors_url/randomvector`,handleGetHomePageVector);

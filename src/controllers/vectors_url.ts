@@ -35,7 +35,13 @@ export async function handleGetVectorsNameSearch(
 export async function handleGetHomePageVector(req: any, res: any, next: any) {
   try {
     if (!req) return res.status(404).send("Request Not Found");
-    const randNumber = Math.floor(Math.random() * 10);
+
+    const countVector:number=await prisma.vectors_url.count({
+      where:{
+        orientation:"horizontal"
+      }
+    })
+    const randNumber:number = Math.floor(Math.random() * countVector);
     await prisma.vectors_url
       .findMany({
         take: 1,

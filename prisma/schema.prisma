@@ -598,24 +598,46 @@ model vectors_url {
   @@schema("public")
 }
 
-model Animations {
+model animations {
   id                  String                @id @default(uuid())
   name                String                @unique
   description         String
   likes               Int
   shares              Int
   format              String
+  license             String
+  orientation         String
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @updatedAt
-  Animations_Category animations_category[]
-  Animations_Tag      animations_tag[]
+  animations_category animations_category[]
+  animations_tag      animations_tag[]
+  animations_url      animations_url[]
 
   @@map("animations")
   @@schema("public")
 }
 
+model animations_url {
+  animation    animations @relation(fields: [animation_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  animation_id String
+  name         String     @unique
+  description  String
+  likes        Int
+  shares       Int
+  format       String
+  license      String
+  orientation  String
+  url          String     @unique
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@id([animation_id])
+  @@map("animations_url")
+  @@schema("public")
+}
+
 model animations_category {
-  animation    Animations @relation(fields: [animation_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  animation    animations @relation(fields: [animation_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   animation_id String
   category     Category   @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   category_id  String
@@ -628,7 +650,7 @@ model animations_category {
 }
 
 model animations_tag {
-  animation    Animations @relation(fields: [animation_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  animation    animations @relation(fields: [animation_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   animation_id String
   tag          Tags       @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   tag_id       String
