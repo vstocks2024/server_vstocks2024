@@ -40,6 +40,9 @@ export async function handleGetHomePageVector(req: any, res: any, next: any) {
       .findMany({
         take: 1,
         skip: randNumber,
+        where:{
+          orientation:"horizontal"
+        }
       })
       .then((dbresolve) => {
         res.status(200).send(dbresolve);
