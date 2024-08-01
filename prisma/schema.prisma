@@ -601,6 +601,7 @@ model vectors_url {
 model animations {
   id                  String                @id @default(uuid())
   name                String                @unique
+  animation_data      Json[]
   description         String
   likes               Int
   shares              Int
@@ -618,18 +619,19 @@ model animations {
 }
 
 model animations_url {
-  animation    animations @relation(fields: [animation_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  animation_id String
-  name         String     @unique
-  description  String
-  likes        Int
-  shares       Int
-  format       String
-  license      String
-  orientation  String
-  url          String     @unique
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  animation      animations @relation(fields: [animation_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  animation_id   String
+  name           String     @unique
+  description    String
+  animation_data Json[]
+  likes          Int
+  shares         Int
+  format         String
+  license        String
+  orientation    String
+  url            String     @unique
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
 
   @@id([animation_id])
   @@map("animations_url")
