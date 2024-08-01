@@ -24,7 +24,7 @@ export async function handleDeleteAnimation(req: any, res: any, next: any) {
   try {
     if (!req) res.status(404).send("No Request Found");
     const animationId = req.params.deleteId;
-    await prisma.template
+    await prisma.animations
       .delete({
         where: {
           id: animationId,
@@ -126,7 +126,7 @@ export async function handleCreateNewAnimation(req: any, res: any, next: any) {
                             likes: dbresolve1.likes,
                             shares: dbresolve1.shares,
                             format: dbresolve1.format,
-                            url: `${process.env.NEXT_PUBLIC_BUCKET_URL}/animations/${dbresolve1.id}`,
+                            thumbnail_url: `${process.env.NEXT_PUBLIC_BUCKET_URL}/animations/${dbresolve1.id}`,
                             license: dbresolve1.license,
                             orientation: dbresolve1.orientation,
                           },

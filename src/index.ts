@@ -75,6 +75,7 @@ import { handleGetCategoryByVector, handleGetTotalVectorPagesByCategoryName, han
 import { handleGetTagByVector } from "./controllers/vector_tag";
 import { handleGetHomePageVector, handleGetVectorsNameSearch } from "./controllers/vectors_url";
 import { handleGetTagsIdAndName } from "./controllers/animations_tags";
+import { handleGetAnimationsUrlListAll } from "./controllers/animations_url";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -250,3 +251,7 @@ app.get("/animations_tags/listtags",handleGetTagsIdAndName);
 //Vector_Url API
 
 app.get(`/vectors_url/randomvector`,handleGetHomePageVector);
+
+//Animation_Url API
+
+app.get(`/animations_url/listall`,handleGetAnimationsUrlListAll);

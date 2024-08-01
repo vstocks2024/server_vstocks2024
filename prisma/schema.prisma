@@ -629,7 +629,7 @@ model animations_url {
   format         String
   license        String
   orientation    String
-  url            String     @unique
+  thumbnail_url  String     @unique
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
 
