@@ -24,7 +24,7 @@ export async function handleGetOneAnimation(req: any, res: any, next: any) {
         orientation: "Horizontal",
       },
     });
-    const randNumber: number = Math.floor(Math.random() * countAnimation - 1);
+    const randNumber: number = Math.floor(Math.random() * countAnimation);
     await prisma.animations_url
       .findMany({
         take: 1,
@@ -144,3 +144,32 @@ export async function handleGetRecommended2Animations(
 
 
 
+export async function handleGetHomePageAnimation(req: any, res: any, next: any) {
+  try {
+    if (!req) return res.status(404).send("Request Not Found");
+
+    const countAnimation:number=await prisma.animations_url.count({
+      where:{
+        orientation:"Horizontal"
+      }
+    })
+    const randNumber:number = Math.floor(Math.random() * countAnimation);
+    await prisma.animations_url
+      .findMany({
+        take: 1,
+        skip: randNumber,
+        where:{
+          orientation:"Horizontal"
+        }
+      })
+      .then((dbresolve) => {
+        res.status(200).send(dbresolve);
+      })
+      .catch((dbreject) => {
+        res.status(400).send(dbreject);
+      });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error);
+  }
+}
