@@ -22,7 +22,7 @@ export async function handleGetOneAnimation(req: any, res: any, next: any) {
 
     const countAnimation: number = await prisma.animations_url.count({
       where: {
-        orientation: "Horizontal",
+        orientation: "horizontal",
       },
     });
     const randNumber: number = Math.floor(Math.random() * countAnimation);
@@ -31,7 +31,7 @@ export async function handleGetOneAnimation(req: any, res: any, next: any) {
         take: 1,
         skip: randNumber,
         where: {
-          orientation: "Horizontal",
+          orientation: "horizontal",
         },
       })
       .then((dbresolve) => {
@@ -55,7 +55,7 @@ export async function handleGetNewAddedAnimations(
     if (!req) return res.status(404).send("Request Not Found");
     const countAnimation: number = await prisma.animations_url.count({
       where: {
-        orientation: "Horizontal",
+        orientation: "horizontal",
       },
     });
     const randNumber: number = Math.floor(Math.random() * (countAnimation - 4));
@@ -64,7 +64,7 @@ export async function handleGetNewAddedAnimations(
         take: 4,
         skip: randNumber,
         where: {
-          orientation: "Horizontal",
+          orientation: "horizontal",
         },
       })
       .then((dbresolve) => {
@@ -87,7 +87,7 @@ export async function handleGetRecommended1Animations(
     if (!req) return res.status(404).send("Request Not Found");
     const countAnimation: number = await prisma.animations_url.count({
       where: {
-        orientation: "Horizontal",
+        orientation: "horizontal",
       },
     });
     const randNumber: number = Math.floor(Math.random() * (countAnimation));
@@ -96,7 +96,7 @@ export async function handleGetRecommended1Animations(
         take: 1,
         skip: randNumber,
         where: {
-          orientation: "Horizontal",
+          orientation: "horizontal",
         },
       })
       .then((dbresolve) => {
@@ -119,7 +119,7 @@ export async function handleGetRecommended2Animations(
     if (!req) return res.status(404).send("Request Not Found");
     const countAnimation: number = await prisma.animations_url.count({
       where: {
-        orientation: "Horizontal",
+        orientation: "horizontal",
       },
     });
     const randNumber: number = Math.floor(Math.random() * (countAnimation - 4));
@@ -128,7 +128,7 @@ export async function handleGetRecommended2Animations(
         take: 4,
         skip: randNumber,
         where: {
-          orientation: "Horizontal",
+          orientation: "horizontal",
         },
       })
       .then((dbresolve) => {
@@ -151,7 +151,7 @@ export async function handleGetHomePageAnimation(req: any, res: any, next: any) 
 
     const countAnimation:number=await prisma.animations_url.count({
       where:{
-        orientation:"Horizontal"
+        orientation:"horizontal"
       }
     })
     const randNumber:number = Math.floor(Math.random() * countAnimation);
@@ -160,7 +160,7 @@ export async function handleGetHomePageAnimation(req: any, res: any, next: any) 
         take: 1,
         skip: randNumber,
         where:{
-          orientation:"Horizontal"
+          orientation:"horizontal"
         }
       })
       .then((dbresolve) => {
