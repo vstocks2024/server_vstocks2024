@@ -75,7 +75,7 @@ import { handleGetCategoryByVector, handleGetTotalVectorPagesByCategoryName, han
 import { handleGetTagByVector } from "./controllers/vector_tag";
 import { handleGetHomePageVector, handleGetVectorsNameSearch } from "./controllers/vectors_url";
 import { handleGetTagsIdAndName } from "./controllers/animations_tags";
-import { handleGetAnimationsUrlListAll, handleGetRecommended1Animations,handleGetRecommended2Animations, handleGetNewAddedAnimations, handleGetOneAnimation, handleGetHomePageAnimation } from "./controllers/animations_url";
+import { handleGetAnimationsUrlListAll, handleGetRecommended1Animations,handleGetRecommended2Animations, handleGetNewAddedAnimations, handleGetOneAnimation, handleGetHomePageAnimation, handleGetAnimationsUrl, handleGetTotalAnimationPages } from "./controllers/animations_url";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -264,3 +264,7 @@ app.get(`/animations_url/getrecommendedone`,handleGetRecommended1Animations);
 app.get(`/animations_url/getrecommendedtwo`,handleGetRecommended2Animations);
 
 app.get(`/animations_url/randomanimation`,handleGetHomePageAnimation)
+
+app.get(`/animations/list_animations_url/:currentPage/:currentLicense/:currentOrientation/:currentFormat/:currentSort`,handleGetAnimationsUrl);
+
+app.get(`/animations/totalpages/:currentPage/:currentLicense/:currentOrientation/:currentFormat`, handleGetTotalAnimationPages)

@@ -115,7 +115,8 @@ export async function handleUpdateTag(req: any, res: any, next: any) {
 export async function handleGetRandomTags(req: any, res: any, next: any) {
   try {
     if (!req) return  res.status(404).send("Request Not Found");
-    const randomnumber: number = Math.floor(Math.random() * 10);
+    const countTags:number=await prisma.tags.count({});
+    const randomnumber: number = Math.floor(Math.random() * countTags);
     console.log(randomnumber);
     await prisma.tags
       .findMany({
