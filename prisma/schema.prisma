@@ -531,6 +531,7 @@ model Tags {
 }
 
 model Vectors {
+  serial_no        Int               @default(autoincrement())
   id               String            @id @default(uuid())
   name             String            @unique
   description      String
@@ -578,6 +579,7 @@ model vector_tag {
 }
 
 model vectors_url {
+  serial_no   Int      @default(autoincrement())
   vector      Vectors  @relation(fields: [vector_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   vector_id   String
   name        String   @unique
@@ -599,6 +601,7 @@ model vectors_url {
 }
 
 model animations {
+  serial_no           Int                   @default(autoincrement())
   id                  String                @id @default(uuid())
   name                String                @unique
   animation_data      Json[]
@@ -619,6 +622,7 @@ model animations {
 }
 
 model animations_url {
+  serial_no      Int        @default(autoincrement())
   animation      animations @relation(fields: [animation_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   animation_id   String
   name           String     @unique

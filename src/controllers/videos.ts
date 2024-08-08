@@ -13,6 +13,7 @@ export async function handleListVideo(req: any, res: any, next: any) {
       .findMany()
       .then(async (dbresolve) => {
         ////console.log(dbresolve);
+        res.appennd("Access-Control-Allow-Origin")
         res.send(new SuccessResponse(200, "Success", dbresolve));
       })
       .catch(async (dbreject) => {
